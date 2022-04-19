@@ -2,7 +2,7 @@ import { useQuery } from "react-query";
 import { getMovies, IGetMoviesResult } from "./api";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
-import { makeImagePath } from "../utils/utils";
+import { getGenres, makeImagePath } from "../utils/utils";
 import { useDirection, useWindowDimensions } from "../utils/useResponsive";
 import { useState } from "react";
 
@@ -52,15 +52,58 @@ const Row = styled(motion.div)<{ direction: string }>`
   position: absolute;
   width: 100%;
 `;
-const Box = styled(motion.div)<{ bgPhoto: string }>`
+const Box = styled(motion.div)`
   background-color: white;
-  background-image: url(${(props) => props.bgPhoto});
-  background-size: cover;
-  background-position: center center;
-  height: 0;
-  padding-bottom: 56.25%;
-  color: red;
   font-size: 60px;
+  &:first-child {
+    transform-origin: 50% 0;
+  }
+  &:last-child {
+    transform-origin: 50% 100%;
+  }
+`;
+const BoxImage = styled.img`
+  display: inherit;
+  width: 100%;
+`;
+const Info = styled(motion.div)`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  padding: 10px 20px;
+  background-color: ${(props) => props.theme.black.lighter};
+  font-size: 12px;
+  opacity: 0;
+  h4 {
+    font-size: 18px;
+  }
+`;
+
+const GenreList = styled.ul`
+  margin: 5px 0;
+  li {
+    display: inline-block;
+    background-color: #000;
+    padding: 2px;
+    margin-right: 3px;
+    margin-bottom: 5px;
+    //color: #222;
+    border-radius: 2px;
+    &:before {
+      content: "#";
+    }
+  }
+`;
+
+const InfoOverview = styled.p`
+  margin-top: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  line-height: 14px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 `;
 
 const rowVariants = {
@@ -75,6 +118,23 @@ const rowVariants = {
   },
 };
 
+const boxVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: { delay: 0.3, duration: 0.3, type: "tween" },
+  },
+};
+
+const infoVariants = {
+  hover: {
+    opacity: 1,
+    transition: { delay: 0.3, duration: 0.2, type: "tween" },
+  },
+};
 function Home() {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -133,8 +193,30 @@ function Home() {
                   .map((movie) => (
                     <Box
                       key={movie.id}
-                      bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                    />
+                      initial="normal"
+                      whileHover="hover"
+                      variants={boxVariants}
+                      transition={{ type: "tween" }}
+                      // bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
+                    >
+                      <BoxImage
+                        src={makeImagePath(movie.backdrop_path, "w500")}
+                        alt={movie.title}
+                      />
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                        <GenreList>
+                          {getGenres(movie.genre_ids).map((item) => (
+                            <li>{item}</li>
+                          ))}
+                        </GenreList>
+                        <div>
+                          <span>개봉일 : {movie.release_date}</span>{" "}
+                          <span>평점 : {movie.vote_average.toFixed(1)}</span>
+                        </div>
+                        <InfoOverview>{movie.overview}</InfoOverview>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>
