@@ -1,12 +1,12 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {RecoilRoot} from "recoil";
-import {ThemeProvider} from "styled-components";
-import {GlobalStyle} from "./GlobalStyle";
-import {QueryClient, QueryClientProvider} from "react-query";
+import { RecoilRoot } from "recoil";
+import { ThemeProvider } from "styled-components";
+import { GlobalStyle } from "./GlobalStyle";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 import App from "./App";
-import {theme} from "./theme";
+import { theme } from "./theme";
 
 const client = new QueryClient();
 ReactDOM.render(
@@ -14,8 +14,8 @@ ReactDOM.render(
     <RecoilRoot>
       <QueryClientProvider client={client}>
         <ThemeProvider theme={theme}>
-          <GlobalStyle/>
-          <App/>
+          <GlobalStyle />
+          <App />
         </ThemeProvider>
       </QueryClientProvider>
     </RecoilRoot>
