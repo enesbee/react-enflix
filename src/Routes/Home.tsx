@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const Wrapper = styled.div`
   background: black;
-  height: 200vh;
+  height: 130vh;
 `;
 
 const Loader = styled.div`
