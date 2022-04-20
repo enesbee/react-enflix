@@ -189,6 +189,11 @@ const ModalInfoBox = styled.div`
     color: ${(props) => props.theme.white.lighter};
     font-size: 14px;
     line-height: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
   }
 `;
 
