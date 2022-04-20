@@ -1,4 +1,4 @@
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, PathMatch, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { motion, useAnimation, useViewportScroll } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -110,8 +110,8 @@ const navVariants = {
 
 function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
-  const homeMatch = useRouteMatch("/");
-  const tvMatch = useRouteMatch("/tv");
+  const homeMatch: PathMatch<string> | null = useMatch("/");
+  const tvMatch: PathMatch<string> | null = useMatch("/tv");
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const { scrollY } = useViewportScroll();
@@ -150,9 +150,7 @@ function Header() {
         </Logo>
         <Items>
           <Item>
-            <Link to="/">
-              Home {homeMatch?.isExact && <Circle layoutId="circle" />}
-            </Link>
+            <Link to="/">Home {homeMatch && <Circle layoutId="circle" />}</Link>
           </Item>
           <Item>
             <Link to="/tv">
