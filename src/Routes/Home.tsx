@@ -160,6 +160,36 @@ const MovieModalInfo = styled(motion.div)`
   left: 0;
   right: 0;
   margin: 0 auto;
+  background-color: ${(props) => props.theme.black.lighter};
+  border-radius: 15px;
+  overflow: hidden;
+`;
+
+const ModalInfoImg = styled.div`
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  background-size: cover;
+`;
+const ModalInfoBox = styled.div`
+  position: relative;
+  top: -10px;
+  padding: 20px;
+  background-color: ${(props) => props.theme.black.lighter};
+  border-top: 1px solid black;
+  border-radius: 15px 15px 0 0;
+  z-index: 1;
+
+  > h2 {
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 24px;
+    margin: -60px 0 30px 0;
+  }
+  > p {
+    color: ${(props) => props.theme.white.lighter};
+    font-size: 14px;
+    line-height: 20px;
+  }
 `;
 
 const rowVariants = {
@@ -230,6 +260,12 @@ function Home() {
   const onOverlayClicked = () => {
     navigate(`/`);
   };
+  const clickedMovie =
+    moviePathMatch?.params.id &&
+    movieListData?.results.find(
+      (movie) => String(movie.id) === moviePathMatch?.params.id
+    );
+
   return (
     <Wrapper>
       {isMovieListLoading ? (
@@ -309,7 +345,24 @@ function Home() {
                 <MovieModalInfo
                   layoutId={moviePathMatch.params.id}
                   style={{ top: scrollY.get() + 100 }}
-                ></MovieModalInfo>
+                >
+                  {clickedMovie && (
+                    <>
+                      <ModalInfoImg
+                        style={{
+                          backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                            clickedMovie.backdrop_path,
+                            "w500"
+                          )})`,
+                        }}
+                      />
+                      <ModalInfoBox>
+                        <h2>{clickedMovie.title}</h2>
+                        <p>{clickedMovie.overview}</p>
+                      </ModalInfoBox>
+                    </>
+                  )}
+                </MovieModalInfo>
               </>
             )}
           </AnimatePresence>
